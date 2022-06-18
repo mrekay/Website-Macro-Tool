@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{341D7118-163E-4CDD-8285-8B2492DC8084}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>WebStressTool</RootNamespace>
+    <AssemblyName>WebStressTool</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenQA.Selenium.Chrome.ChromeDriverExtensions, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenQA.Selenium.Chrome.ChromeDriverExtensions.1.2.0\lib\netstandard2.0\OpenQA.Selenium.Chrome.ChromeDriverExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebDriver, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Selenium.WebDriver.4.2.0\lib\net47\WebDriver.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\ChromeDriverManager.cs" />
+    <Compile Include="Classes\Loop.cs" />
+    <Compile Include="Classes\LoopManager.cs" />
+    <Compile Include="Classes\Macro.cs" />
+    <Compile Include="Classes\MacroTypes.cs" />
+    <Compile Include="Classes\Model\Model_MACRO.cs" />
+    <Compile Include="Classes\Model\Model_URL.cs" />
+    <Compile Include="Classes\Model\Model_URLS.cs" />
+    <Compile Include="Classes\OperationManager.cs" />
+    <Compile Include="Classes\RegisteredSites.cs" />
+    <Compile Include="Classes\Settings.cs" />
+    <Compile Include="Classes\SettingsConverter.cs" />
+    <Compile Include="Classes\Url.cs" />
+    <Compile Include="Classes\Variable.cs" />
+    <Compile Include="Classes\XMLHelper.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\AddLoopVariable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddLoopVariable.Designer.cs">
+      <DependentUpon>AddLoopVariable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoopManagerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoopManagerForm.Designer.cs">
+      <DependentUpon>LoopManagerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Loops.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Loops.Designer.cs">
+      <DependentUpon>Loops.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LoopSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoopSettings.Designer.cs">
+      <DependentUpon>LoopSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Macros.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Macros.Designer.cs">
+      <DependentUpon>Macros.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ValueChanger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ValueChanger.Designer.cs">
+      <DependentUpon>ValueChanger.cs</DependentUpon>
+    </Compile>
+    <Compile Include="libs\config\config.cs" />
+    <Compile Include="libs\functions.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddLoopVariable.resx">
+      <DependentUpon>AddLoopVariable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoopManagerForm.resx">
+      <DependentUpon>LoopManagerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Loops.resx">
+      <DependentUpon>Loops.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoopSettings.resx">
+      <DependentUpon>LoopSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Macros.resx">
+      <DependentUpon>Macros.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ValueChanger.resx">
+      <DependentUpon>ValueChanger.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.102.0.5005.6102\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.102.0.5005.6102\build\Selenium.WebDriver.ChromeDriver.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Bu proje bu bilgisayarda olmayan NuGet paketlerine başvuru yapıyor. Bunları indirmek için NuGet Paket Geri Yükleme'yi kullanın. Daha fazla bilgi için, bkz. http://go.microsoft.com/fwlink/?LinkID=322105. Eksik dosya: {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.102.0.5005.6102\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.102.0.5005.6102\build\Selenium.WebDriver.ChromeDriver.targets'))" />
+  </Target>
+</Project>
