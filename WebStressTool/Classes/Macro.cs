@@ -31,6 +31,9 @@ namespace WebStressTool.Classes
                 case MacroTypes.Javascript:
                     macroText = _macroText;
                     break;
+                case MacroTypes.Goto:
+                    macroText = _macroText;
+                    break;
                 default:
                     break;
             }

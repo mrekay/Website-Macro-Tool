@@ -24,82 +24,77 @@ namespace WebStressTool.Forms
 
             ViewURL = _regSites.Get(unique);
             GetMacros();
-            listView1.Columns[3].Width = 0;
+            listView1.Columns[5].Width = 0;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            lbl_txt_title.Text = "XPATH";
+            xpath_textbox.Enabled = false;
+            variable_textbox.Visible = false;
+            variable_label.Visible = false;
+            variable_textbox.Clear();
             switch (comboBox1.SelectedItem)
             {
                 case "Click":
-                    variable_textbox.Visible = false;
-                    variable_label.Visible = false;
                     SelectedMacroType = MacroTypes.Click;
-                    variable_textbox.Clear();
+                    xpath_textbox.Enabled = true;
                     break;
                 case "Write":
                     variable_textbox.Visible = true;
-                    variable_label.Text = "Yazılacak Metin";
                     variable_label.Visible = true;
+                    xpath_textbox.Enabled = true;
+                    variable_label.Text = "Yazılacak Metin";
                     SelectedMacroType = MacroTypes.Write;
                     variable_textbox.Clear();
                     break;
                 case "Wait":
                     variable_textbox.Visible = true;
-                    variable_label.Text = "Beklenilecek Süre";
                     variable_label.Visible = true;
+                    variable_label.Text = "Beklenilecek Süre";
                     SelectedMacroType = MacroTypes.Wait;
-                    variable_textbox.Clear();
                     break;
                 case "Javascript":
                     variable_textbox.Visible = true;
-                    variable_label.Text = "Çalıştırılacak JS";
                     variable_label.Visible = true;
+                    variable_label.Text = "Çalıştırılacak JS";
                     SelectedMacroType = MacroTypes.Javascript;
                     variable_textbox.Clear();
                     break;
+                case "Goto":
+                    variable_textbox.Visible = true;
+                    variable_label.Visible = true;
+                    xpath_textbox.Enabled = true;
+                    variable_label.Text = "Tekrar sayısı";
+                    lbl_txt_title.Text = "Tekrar edecek makro konumu";
+                    SelectedMacroType = MacroTypes.Goto;
+                    break;
                 case "Pause":
-                    variable_textbox.Visible = false;
-                    variable_label.Visible = false;
                     SelectedMacroType = MacroTypes.Pause;
-                    variable_textbox.Clear();
                     break;
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ViewURL.macros.Add(new Macro(textBox1.Text, variable_textbox.Text, SelectedMacroType));
-            textBox1.Clear();
+            if (xpath_textbox.Enabled && string.IsNullOrEmpty(xpath_textbox.Text)) return;
+            if (variable_textbox.Visible && string.IsNullOrEmpty(variable_textbox.Text)) return;
+
+            ViewURL.macros.Add(new Macro(xpath_textbox.Text, variable_textbox.Text, SelectedMacroType));
             comboBox1.Text = "";
+            xpath_textbox.Clear();
             variable_textbox.Clear();
             GetMacros();
+            functions.GetMainForm().SomethingChanged = true;
         }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            textBox1.Enabled = true;
-            if (comboBox1.Text == "Javascript" || comboBox1.Text == "Wait" || comboBox1.Text == "Pause") { textBox1.Enabled = false; }
-            else if (string.IsNullOrEmpty(textBox1.Text) || string.IsNullOrWhiteSpace(textBox1.Text)) { button1.Enabled = false; return; }
-
-            if (string.IsNullOrEmpty(comboBox1.Text) || string.IsNullOrWhiteSpace(comboBox1.Text)) { button1.Enabled = false; return; }
-            if (comboBox1.Text != "Click")
-            {
-                if (comboBox1.Text != "Pause")
-                {
-                    if (string.IsNullOrEmpty(variable_textbox.Text) || string.IsNullOrWhiteSpace(variable_textbox.Text)) { button1.Enabled = false; return; }
-                }
-            }
-            button1.Enabled = true;
-
-        }
+        
 
         public void GetMacros()
         {
             listView1.Items.Clear();
             foreach (var item in ViewURL.macros)
             {
-                string[] row = { item.macroType.ToString(), item.macroXPATH, (!string.IsNullOrEmpty(item.macroText) || !string.IsNullOrWhiteSpace(item.macroText) ? item.macroText : item.macroWaitDelay.ToString()), item.macroID.ToString() };
+                string[] row = { item.macroType.ToString(), MacroTypes.Goto != item.macroType ?  item.macroXPATH : "", (!string.IsNullOrEmpty(item.macroText) || !string.IsNullOrWhiteSpace(item.macroText) ? (MacroTypes.Goto != item.macroType ? item.macroText :""): item.macroWaitDelay.ToString()),item.macroText,item.macroType == MacroTypes.Goto ? item.macroXPATH.ToString() :"", item.macroID.ToString() };
                 ListViewItem listViewItem = new ListViewItem(row);
                 listView1.Items.Add(listViewItem);
             }
@@ -112,6 +107,7 @@ namespace WebStressTool.Forms
             ViewURL.macros[index - 1] = ViewURL.macros[index];
             ViewURL.macros[index] = up_element;
             return index - 1;
+            functions.GetMainForm().SomethingChanged = true;
         }
         public int MoveElementDown(int index)
         {
@@ -120,6 +116,7 @@ namespace WebStressTool.Forms
             ViewURL.macros[index + 1] = ViewURL.macros[index];
             ViewURL.macros[index] = down_element;
             return index + 1;
+            functions.GetMainForm().SomethingChanged = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -154,16 +151,53 @@ namespace WebStressTool.Forms
         {
             button3.Enabled = false;
             button4.Enabled = false;
+            button5.Enabled = false;
             if (listView1.SelectedItems.Count <= 0) return;
             if (listView1.SelectedItems[0].Index != 0) button3.Enabled = true;
             if (listView1.SelectedItems[0].Index != listView1.Items.Count) button4.Enabled = true;
+            button5.Enabled = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count <= 0) return;
-            ViewURL.macros.RemoveAt(listView1.SelectedItems[0].Index);
+            if (listView1.SelectedItems.Count > 0)
+            {
+                int silinen_count = 0;
+                foreach(ListViewItem item in listView1.SelectedItems)
+                {
+                    var item_index = listView1.Items.IndexOf(item)- silinen_count;
+                    ViewURL.macros.RemoveAt(item_index);
+                    silinen_count++;
+                    
+                }
+                GetMacros();
+            }
+            functions.GetMainForm().SomethingChanged = true;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count == 1) { 
+            ViewURL.Duplicate(listView1.SelectedItems[0].Index);
             GetMacros();
+            }
+            else
+            {
+                List<int> index_list = new List<int>();
+                foreach(ListViewItem item in listView1.SelectedItems)
+                {
+                    var i = listView1.Items.IndexOf(item);
+                    index_list.Add(i);
+                }
+                ViewURL.Duplicate(index_list.ToArray());
+                GetMacros();
+            }
+            functions.GetMainForm().SomethingChanged = true;
+        }
+
+        private void Macros_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }

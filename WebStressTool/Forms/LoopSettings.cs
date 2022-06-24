@@ -25,6 +25,7 @@ namespace WebStressTool.Forms
 
             if (!string.IsNullOrEmpty(Properties.Settings.Default.last_config_directory))
                 functions.GetMainForm().SaveSettings(Properties.Settings.Default.last_config_directory);
+            functions.GetMainForm().SomethingChanged = true;
         }
 
         private void LoopSettings_Load(object sender, EventArgs e)

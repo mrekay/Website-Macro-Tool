@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebStressTool.libs;
 
 namespace WebStressTool.Classes
 {
@@ -31,12 +32,14 @@ namespace WebStressTool.Classes
         {
             if (string.IsNullOrEmpty(href) || string.IsNullOrWhiteSpace(href)) return;
             URLs.Add(new Url(href));
+            functions.GetMainForm().SomethingChanged = true;
         }
         public void Edit(string id, string href)
         {
             var _id = URLs.IndexOf(Get(id));
             if (string.IsNullOrEmpty(href) || string.IsNullOrWhiteSpace(href)) return;
             URLs[_id].href = href;
+            functions.GetMainForm().SomethingChanged = true;
         }
 
         public void Remove(string unique)
@@ -47,6 +50,7 @@ namespace WebStressTool.Classes
                 if (id == item.unique)
                 {
                     URLs.Remove(item); break;
+                    functions.GetMainForm().SomethingChanged = true;
                 }
             }
         }
@@ -58,6 +62,7 @@ namespace WebStressTool.Classes
             URLs[index - 1] = URLs[index];
             URLs[index] = up_element;
             return index - 1;
+            functions.GetMainForm(). SomethingChanged = true;
         }
         public int MoveElementDown(int index)
         {
@@ -66,6 +71,7 @@ namespace WebStressTool.Classes
             URLs[index + 1] = URLs[index];
             URLs[index] = down_element;
             return index + 1;
+            functions.GetMainForm().SomethingChanged = true;
         }
 
 

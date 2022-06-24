@@ -320,7 +320,9 @@ namespace WebStressTool.Classes
                 if (this.GetElementByXpath(xpath) is null) return;
                 this.GetElementByXpath(xpath).Click();
             }
-            catch { return; }
+            catch(Exception ex) {
+                Console.WriteLine("Click By Xpath durumunda hata oluştu ayrıntılar \n"+ex.ToString());
+            }
         }
 
         public bool clickByClassName(string id)

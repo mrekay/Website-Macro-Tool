@@ -14,11 +14,11 @@ namespace WebStressTool.Classes
         RegisteredSites registeredSites;
         LoopManager loopManager;
 
-        bool Active = false,SingleShot = false;
+        bool Active = false, SingleShot = false;
         public bool Complete = false;
-        int loopIndex = 0, siteIndex = 0, macroIndex = 0,LoopID = -1;
+        int loopIndex = 0, siteIndex = 0, macroIndex = 0, LoopID = -1;
 
-        public OperationManager(RegisteredSites registeredSites, LoopManager loopManager,int _LoopID = -1)
+        public OperationManager(RegisteredSites registeredSites, LoopManager loopManager, int _LoopID = -1)
         {
             this.registeredSites = registeredSites;
             this.loopManager = loopManager;
@@ -86,28 +86,42 @@ namespace WebStressTool.Classes
             foreach (var macro in loopURL.macros)
             {
                 if (!Active) break;
-                switch (macro.macroType)
-                {
-                    case MacroTypes.Click:
-                        chromeDriverManager.clickByXpath(macro.macroXPATH);
-                        Thread.Sleep(250);
-                        break;
-                    case MacroTypes.Write:
-                        chromeDriverManager.clickByXpath(macro.macroXPATH);
-                        chromeDriverManager.setValueByXpath(macro.macroXPATH, get_write_param(macro.macroText));
-                        Thread.Sleep(250);
-                        break;
-                    case MacroTypes.Javascript:
-                        chromeDriverManager.runJavaScript(get_write_param(macro.macroText));
-                        Thread.Sleep(250);
-                        break;
-                    case MacroTypes.Wait:
-                        Thread.Sleep(macro.macroWaitDelay);
-                        break;
-                    case MacroTypes.Pause:
-                        Stop();
-                        break;
-                }
+                MakeMacroOperation(macro, loopURL.macros);
+            }
+        }
+
+        public void MakeMacroOperation(Macro macro, List<Macro> macros,string value = "")
+        {
+            if (!Active) return;
+            switch (macro.macroType)
+            {
+                case MacroTypes.Click:
+                    chromeDriverManager.clickByXpath(ReplaceValue(macro.macroXPATH,value));
+                    Thread.Sleep(250);
+                    break;
+                case MacroTypes.Write:
+                    chromeDriverManager.clickByXpath(ReplaceValue(macro.macroXPATH, value));
+                    chromeDriverManager.setValueByXpath(ReplaceValue(macro.macroXPATH, value), get_write_param(macro.macroText));
+                    Thread.Sleep(250);
+                    break;
+                case MacroTypes.Javascript:
+                    chromeDriverManager.runJavaScript(get_write_param(macro.macroText));
+                    Thread.Sleep(250);
+                    break;
+                case MacroTypes.Wait:
+                    Thread.Sleep(macro.macroWaitDelay);
+                    break;
+                case MacroTypes.Goto:
+                    int loopCount = Convert.ToInt32( macro.macroText);
+                    for (int i = 1; i <= loopCount; i++)
+                    {
+                        MakeMacroOperation(macros[Int32.Parse(macro.macroXPATH)-1], macros,i.ToString());
+                        Thread.Sleep(2500);
+                    }
+                    break;
+                case MacroTypes.Pause:
+                    Stop();
+                    break;
             }
         }
 
@@ -120,19 +134,23 @@ namespace WebStressTool.Classes
             }
             return write_param;
         }
-
+        public string ReplaceValue(string text,string value)
+        {
+            return text.Replace("@gindex", value);
+        }
         private string SearchForLoopDictionary(string variableName)
         {
 
-            foreach (var variable in loopManager.Loops[loopIndex].variables) {
+            foreach (var variable in loopManager.Loops[loopIndex].variables)
+            {
 
                 var substringed_text = variableName.Split(':')[1];
                 if (variable.Name.ToLower() == substringed_text.ToLower()) return variable.Value;
-            
+
             }
 
             return variableName;
         }
-
+        
     }
 }

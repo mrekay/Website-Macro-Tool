@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WebStressTool.Classes;
+using WebStressTool.libs;
+
 namespace WebStressTool.Forms
 {
     public partial class Loops : Form
@@ -28,6 +30,7 @@ namespace WebStressTool.Forms
             var loop = new Loop(); loop.variables.Add(loopDict);
             loopMan.Loops.Add(loop);
             GetLoops();
+            functions.GetMainForm().SomethingChanged = true;
         }
 
         public void GetLoops()
@@ -71,6 +74,7 @@ namespace WebStressTool.Forms
             loopMan.Loops.RemoveAt(index);
             tabControl1.TabPages.RemoveAt(index);
             GetLoops();
+            functions.GetMainForm().SomethingChanged = true;
         }
 
         private void btn_add_variable_Click(object sender, EventArgs e)
@@ -83,6 +87,7 @@ namespace WebStressTool.Forms
             AddLoopVariable alv = new AddLoopVariable(loopMan, index);
             var dResult = alv.ShowDialog();
             if (dResult == DialogResult.OK) frm.GetVariables();
+            functions.GetMainForm().SomethingChanged = true;
         }
 
         private void btn_remove_variable_Click(object sender, EventArgs e)
@@ -91,16 +96,19 @@ namespace WebStressTool.Forms
             if (index < 0) return;
 
             var frm = tabControl1.TabPages[index].Controls[0] as LoopManagerForm;
+            if (frm.listView1.SelectedItems.Count <= 0) return;
             var selIndex = frm.listView1.SelectedItems[0].Index;
             if (selIndex <= 0) return;
             loopMan.Loops[index].variables.RemoveAt(selIndex);
             frm.GetVariables();
+            functions.GetMainForm().SomethingChanged = true;
         }
 
         private void btn_settings_Click(object sender, EventArgs e)
         {
             LoopSettings lpSettings = new LoopSettings();
             lpSettings.ShowDialog();
+            functions.GetMainForm().SomethingChanged = true;
         }
     }
 }

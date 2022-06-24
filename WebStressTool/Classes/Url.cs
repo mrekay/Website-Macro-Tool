@@ -25,8 +25,24 @@ namespace WebStressTool.Classes
 
         }
 
-        
-
+        internal void Duplicate(int index)
+        {
+            var _macro = macros[index];
+            var macro_text = !string.IsNullOrEmpty(_macro.macroText) ? _macro.macroText : _macro.macroWaitDelay.ToString();
+            Macro n_macro = new Macro(_macro.macroXPATH,macro_text,_macro.macroType);
+            macros.Add(n_macro);
+            functions.GetMainForm().SomethingChanged = true;
+        }
+        internal void Duplicate(int[] index)
+        {
+            foreach(int i in index) {
+                var _macro = macros[i];
+                var macro_text = !string.IsNullOrEmpty(_macro.macroText) ? _macro.macroText : _macro.macroWaitDelay.ToString();
+                Macro n_macro = new Macro(_macro.macroXPATH, macro_text, _macro.macroType);
+                macros.Add(n_macro);
+            }
+            functions.GetMainForm().SomethingChanged = true;
+        }
     }
 
 }

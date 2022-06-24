@@ -16,6 +16,7 @@ namespace WebStressTool
     public partial class Form1 : Form
     {
 
+        public bool SomethingChanged = false;
         public Form1()
         {
             InitializeComponent();
@@ -33,13 +34,13 @@ namespace WebStressTool
         {
             if (textBox1.Text.StartsWith("https://") || textBox1.Text.StartsWith("http://"))
             {
-            RegisterSite(textBox1.Text);
-            textBox1.Clear();
-            GetRegisteredSites();
+                RegisterSite(textBox1.Text);
+                textBox1.Clear();
+                GetRegisteredSites();
             }
             else
             {
-                MessageBox.Show("URL https:// ya da http:// ile başlamalıdır.","Uyarı!",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("URL https:// ya da http:// ile başlamalıdır.", "Uyarı!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -60,11 +61,13 @@ namespace WebStressTool
         public void RegisterSite(string _url)
         {
             registeredSites.Add(_url);
+            SomethingChanged = true;
         }
         public void RemoveSite()
         {
             registeredSites.Remove(listView1.SelectedItems[0].SubItems[1].Text);
             GetRegisteredSites();
+            SomethingChanged = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -154,6 +157,7 @@ namespace WebStressTool
                 LoadSettings(opf.FileName);
                 MessageBox.Show("Ayarları İçe Aktarma Başarılı", "İşlem Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+
                 GetRegisteredSites();
             }
         }
@@ -166,6 +170,7 @@ namespace WebStressTool
             Properties.Settings.Default.max_loop_limit = settings.max_loop_limit;
             Properties.Settings.Default.last_config_directory = path;
             Properties.Settings.Default.Save();
+            Text = string.Format("Website Macro Tool ({0})", path);
         }
 
         OperationManager operationManager;
@@ -241,15 +246,18 @@ namespace WebStressTool
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MessageBox.Show("Ayarları Kaydetmek İster misiniz?", "Ayarları Kaydet", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (SomethingChanged)
             {
-                if (!string.IsNullOrEmpty(Properties.Settings.Default.last_config_directory))
+                if (MessageBox.Show("Ayarları Kaydetmek İster misiniz?", "Ayarları Kaydet", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    SaveSettings(Properties.Settings.Default.last_config_directory);
-                }
-                else
-                {
-                    button7_Click(sender,e);
+                    if (!string.IsNullOrEmpty(Properties.Settings.Default.last_config_directory))
+                    {
+                        SaveSettings(Properties.Settings.Default.last_config_directory);
+                    }
+                    else
+                    {
+                        button7_Click(sender, e);
+                    }
                 }
             }
         }

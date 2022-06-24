@@ -14,6 +14,7 @@ namespace WebStressTool.Classes.Model
         public string macroText;
         public int macroWaitDelay;
 
+
         public MacroTypes macroType;
     }
 }
